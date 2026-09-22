@@ -60,11 +60,3 @@ data_prep/study_cohort_genetics/output/regional_ld/*
 #     they're empty.
 !data_prep/100plus_study_cohort/output/README.md
 !data_prep/nbb_replication_cohort/output/README.md
-
-# --- Manuscript working files dropped at the repo root ---
-# Draft manuscript and supplementary tables, kept here for local
-# cross-referencing against the code - not part of the code repository itself
-# and never committed. Publish the manuscript through the journal/preprint,
-# not this repo.
-*.docx
-tables_1_2_3_supplementary_tables_1_2.xlsx
