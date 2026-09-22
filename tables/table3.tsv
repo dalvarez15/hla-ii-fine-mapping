@@ -1,0 +1,16 @@
+Haplotype	Feature	Outcome variable	Beta	SE	Std. Beta	P	FDR P	N
+Hap-B	rs35472547	Braak NFT stage (NBB)	-0.371	0.1368	-0.0922	6.86e-03	4.40e-02	761
+Hap-B	DR4	Braak NFT stage (NBB)	-0.343	0.1096	-0.1083	1.81e-03	4.19e-02	730
+Hap-B	DR4	Braak NFT stage (NBB) corrected for: Braak amyloid-β stage	-0.1761	0.0656	-0.0556	7.40e-03	4.40e-02	730
+Hap-B	DRB1*04:01	Braak α-synuclein stage	-0.1701	0.07	-0.0893	1.53e-02	4.40e-02	730
+Hap-B	DQA1*03:01	Braak amyloid-β stage	-0.2145	0.0868	-0.0841	1.37e-02	4.40e-02	757
+Hap-B	DQA1*03:01	Braak NFT stage (NBB)	-0.4951	0.1676	-0.1006	3.25e-03	4.19e-02	757
+Hap-B	DQA1*03:01	Braak α-synuclein stage	-0.1649	0.0661	-0.0896	1.29e-02	4.40e-02	757
+Hap-B	DQB1*03:02	Braak NFT stage (NBB)	-0.4054	0.1621	-0.0851	1.26e-02	4.40e-02	760
+Hap-R	rs9469112	HLA class II load	-0.5369	0.1969	-0.2047	7.76e-03	3.47e-02	95
+Hap-Y	rs4335021	HLA class II load	1.2096	0.217	0.5733	2.81e-07	2.51e-06	95
+Hap-Y	DR2	HLA class II load	1.1998	0.2208	0.5699	5.52e-07	3.70e-06	91
+Hap-Y	DRB1*15:01	HLA class II load	1.622	0.2412	0.7519	2.18e-09	2.92e-08	91
+Hap-Y	DQA1*01:02	HLA class II load	0.8379	0.197	0.4356	5.35e-05	2.87e-04	95
+Hap-Y	DQA1*01:02	Braak α-synuclein stage	0.1207	0.0482	0.0897	1.24e-02	4.40e-02	757
+Hap-Y	DQB1*06:02	HLA class II load	1.6338	0.2377	0.756	9.83e-10	2.64e-08	94

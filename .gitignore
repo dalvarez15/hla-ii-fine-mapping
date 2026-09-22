@@ -1,0 +1,70 @@
+# =============================================================================
+# What never gets committed, and why. Everything under raw_input_data/ and
+# data_prep/*/output/ is ignored by default; each block below excepts only
+# the specific files confirmed to be small, aggregate, non-identifiable
+# summary statistics (SNP/allele-level, not participant-level). If you add a
+# new data_prep/ output and aren't sure whether it's safe to except, don't -
+# leave it ignored and ask first. See DATA_ACCESS.md for the public-facing
+# explanation of what's included/excluded and why.
+# =============================================================================
+
+# --- raw_input_data/: every private input file, entirely ---
+# Participant phenotypes, diagnoses, genotypes/dosages, HLA imputation calls,
+# neuropathology/microglia measurements - see raw_input_data/README.txt and
+# SOURCE_DATA_MANIFEST.md. data_paths.R.example is a placeholder-only
+# template (no real paths or data), safe to publish.
+!raw_input_data/
+raw_input_data/*
+!raw_input_data/data_paths.R.example
+
+# --- data_prep/*/output/: pipeline working directories ---
+# Ignored by default because most of what lands here is one of:
+#   - participant IDs (e.g. study_cohort_samples.txt) - directly re-identifying
+#   - individual-level data (one row per participant) - phenotypes, dosages,
+#     neuropathology/microglia measurements, even after merging
+#   - large regenerable intermediates (PLINK/GCTA working files, full
+#     genotype exports, up to several GB)
+# Exceptions below are the opposite of all three: small, aggregate,
+# SNP/allele-level summary statistics with no participant-level rows,
+# verified by inspecting each file's actual header before excepting it here.
+data_prep/*/output/*
+
+!data_prep/study_cohort_genetics/output/clumping_r2_080.clumps
+!data_prep/study_cohort_genetics/output/cojo_haplotypes_minor_allele.csv
+!data_prep/study_cohort_genetics/output/hla_alleles_snps_regression.csv
+!data_prep/nbb_replication_cohort/output/microglia_neuropathology_regression.csv
+
+!data_prep/study_cohort_genetics/output/haplotype_ld/
+data_prep/study_cohort_genetics/output/haplotype_ld/*
+!data_prep/study_cohort_genetics/output/haplotype_ld/hla_alleles_snps_ld_matrix.ld
+!data_prep/study_cohort_genetics/output/haplotype_ld/hla_alleles_snps_ld_matrix.bim
+
+!data_prep/study_cohort_genetics/output/regional_ld/
+data_prep/study_cohort_genetics/output/regional_ld/*
+!data_prep/study_cohort_genetics/output/regional_ld/regional_ld_pairs.ld
+
+# Explicitly NOT excepted (never committed), despite being read directly by a
+# script - flagged here so it's unmistakable, not just covered by the blanket
+# rule above:
+#   - data_prep/study_cohort_genetics/output/study_cohort_samples.txt
+#     Raw participant ID list (from 1_clumping_cojo.R, read by 2_regional_ld.R).
+#     Directly re-identifying - never share this file, in any form.
+#   - data_prep/100plus_study_cohort/output/hla_alleles_snps_dosages_microglia_neuropathology_100plus.csv
+#   - data_prep/nbb_replication_cohort/output/hla_alleles_snps_dosages_neuropathology_nbb.csv
+#     Individual-level (one row per participant), not aggregate summary
+#     statistics, even though read directly by
+#     data_prep/nbb_replication_cohort/3_microglia_neuropathology_regression.R.
+#     Re-running that script needs data_prep/ re-run locally with real data
+#     access - see DATA_ACCESS.md. A placeholder README.md is committed in
+#     their place so these folders still appear on GitHub, explaining why
+#     they're empty.
+!data_prep/100plus_study_cohort/output/README.md
+!data_prep/nbb_replication_cohort/output/README.md
+
+# --- Manuscript working files dropped at the repo root ---
+# Draft manuscript and supplementary tables, kept here for local
+# cross-referencing against the code - not part of the code repository itself
+# and never committed. Publish the manuscript through the journal/preprint,
+# not this repo.
+*.docx
+tables_1_2_3_supplementary_tables_1_2.xlsx

@@ -1,0 +1,48 @@
+## =============================================================================
+## Template for raw_input_data/data_paths.R. Copy this file to
+## raw_input_data/data_paths.R (your copy, with real paths filled in, is
+## gitignored and never committed - only this placeholder template is) and
+## fill in every path below for your own environment.
+##
+## Every path defined here points to private, individual-level data (or a
+## working file derived from it) - see DATA_ACCESS.md for what's excluded
+## from this public repository and why, and
+## raw_input_data/SOURCE_DATA_MANIFEST.md for exactly what each constant is
+## and (internally) where it came from.
+## =============================================================================
+
+## --- Files physically placed under raw_input_data/<cohort>/ ---
+## Small enough to copy into raw_input_data/<cohort>/ directly - gitignored
+## there (see .gitignore), never committed regardless. Already correct if
+## you mirror the layout DATA_ACCESS.md describes; only change these if you
+## use a different layout.
+
+STUDY_COHORT_PHENOTYPES          <- "raw_input_data/study_cohort_genetics/phenotypes.txt"
+STUDY_COHORT_HLA_IMPUTATION_DIR  <- "raw_input_data/study_cohort_genetics/hla_imputation"
+
+HUNDREDPLUS_NEUROPATHOLOGY_XLSX  <- "raw_input_data/100plus_study_cohort/neuropathology.xlsx"
+HUNDREDPLUS_MICROGLIA_XLSX       <- "raw_input_data/100plus_study_cohort/microglia_quantification.xlsx"
+
+NBB_CHR6_DOSAGE_RAW    <- "raw_input_data/nbb_replication_cohort/chr6_dosage.raw"
+NBB_PHENOTYPES_RDATA   <- "raw_input_data/nbb_replication_cohort/phenotypes.Rdata"
+NBB_PCS_EIGENVEC       <- "raw_input_data/nbb_replication_cohort/pcs.eigenvec"
+NBB_HLA_IMPUTATION_DIR <- "raw_input_data/nbb_replication_cohort/hla_imputation"
+
+## --- Files too large or external to mirror under raw_input_data/ ---
+## NOT copied into raw_input_data/ - either too large (the ~27GB genome-wide
+## dosage file) or aggregate data this repository doesn't have redistribution
+## rights to (see DATA_ACCESS.md for which is which). Still private; point
+## these at wherever your own copies live - they don't need to be anywhere
+## under raw_input_data/ at all.
+
+CHR6_GENOMEWIDE_DOSAGE  <- "/path/to/chr6.dose.unscrambled"                  # ~27GB genome-wide chr6 dosage data (PLINK2 .pgen/.pvar/.psam, no extension)
+EADB_GWAS_SUMSTATS_FULL <- "/path/to/eadb_gwas_2026_summary_stats.txt"       # EADB-GWAS-2026 summary statistics, aligned with PLINK
+AD_MEGA_META_HITS       <- "/path/to/ad_mega_meta_hits.tsv.gz"              # external AD-GWAS meta-analysis index-variant hits
+
+## --- Tool binaries ---
+## Update to your own PLINK2/PLINK/GCTA install (or just "plink2"/"plink"/
+## "gcta64" if they're already on your $PATH).
+
+PLINK2_PATH <- "/path/to/plink2"
+PLINK1_PATH <- "/path/to/plink"
+GCTA_PATH   <- "/path/to/gcta64"
