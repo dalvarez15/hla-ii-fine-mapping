@@ -89,6 +89,20 @@ data_prep/nbb_replication_cohort/2_combine_snps_alleles_neuropathology_nbb.R
 data_prep/nbb_replication_cohort/3_microglia_neuropathology_regression.R
 ```
 
+### Resource requirements
+
+Most scripts are lightweight and run fine on a laptop. Two steps in `study_cohort_genetics/` are
+not:
+
+- `1_clumping_cojo.R` extracts from and runs PLINK2 clumping against the ~27GB genome-wide
+  `CHR6_GENOMEWIDE_DOSAGE` file, and exports a ~5.7GB per-sample dosage file (`chr6_mhc.raw`).
+- `5_get_snps_alleles_dosages.R` reads that ~5.7GB file back in with `fread()`.
+
+Both need substantially more memory than the input file size to run comfortably, and on a shared
+HPC system should be submitted as a batch job rather than run on a login node, which is typically
+memory-limited and shared across many users. Every other script operates on much smaller,
+already-trimmed data and doesn't need special handling.
+
 ## Contact
 
 For questions about the code or analysis, contact the corresponding author:
