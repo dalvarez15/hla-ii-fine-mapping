@@ -16,7 +16,9 @@
 ##     committed (see .gitignore) - every participant with a diagnosis this analysis uses (same
 ##     filter as 5_get_snps_alleles_dosages.R), read directly by 2_regional_ld.R
 ##   data_prep/study_cohort_genetics/output/snps/chr6_mhc.dose.unscrambled.* - HLA/MHC-region dosage data
-##   data_prep/study_cohort_genetics/output/snps/chr6_mhc.raw - per-sample dosage export, consumed by 5_get_snps_alleles_dosages.R
+##   data_prep/study_cohort_genetics/output/snps/chr6_mhc.raw.gz - per-sample dosage export,
+##     gzipped immediately after PLINK writes it (~5.7GB plain, ~15x smaller compressed - dosage
+##     values are low-entropy), consumed by 5_get_snps_alleles_dosages.R via zcat
 ##   data_prep/study_cohort_genetics/output/clumping_r2_080.clumps - LD-based clumping output, read directly by figure1_figure2.R
 ##   data_prep/study_cohort_genetics/output/cojo/summary_cojo.txt - COJO results per lead SNP, consumed by 3_cojo_annotate.R
 ## =============================================================================
@@ -98,10 +100,13 @@ system(paste0(
     "--chr 6 --from-bp 28510120 --to-bp 33480575 --make-pgen --out ", GENOTYPE_PATH, "chr6_mhc.dose.unscrambled"
 ))
 
-# Per-sample dosage export (PLINK "A" format), used by 5_get_snps_alleles_dosages.R
+# Per-sample dosage export (PLINK "A" format), used by 5_get_snps_alleles_dosages.R.
+# Gzipped immediately after export - as plain text this is ~5.7GB (150k+ SNP
+# columns), but the dosage values (0/1/2/NA) compress about 15x.
 system(paste0(
     PLINK2_PATH, " --pfile ", GENOTYPE_PATH, "chr6_mhc.dose.unscrambled --export A --out ", GENOTYPE_PATH, "chr6_mhc"
 ))
+system(paste0("gzip -f ", GENOTYPE_PATH, "chr6_mhc.raw"))
 
 # PLINK 1 binary format (.bed/.bim/.fam), used by 2_regional_ld.R
 system(paste0(

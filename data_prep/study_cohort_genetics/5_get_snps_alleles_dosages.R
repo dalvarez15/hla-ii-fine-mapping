@@ -6,8 +6,9 @@
 ## Reads private data not included in this repository - see DATA_ACCESS.md.
 ##
 ## Inputs:
-##   data_prep/study_cohort_genetics/output/snps/chr6_mhc.raw - PLINK dosage export for
-##     the HLA/MHC-region SNPs (from 1_clumping_cojo.R; ~5.7GB, not mirrored in raw_input_data/)
+##   data_prep/study_cohort_genetics/output/snps/chr6_mhc.raw.gz - PLINK dosage export for
+##     the HLA/MHC-region SNPs (from 1_clumping_cojo.R, gzipped there; ~5.7GB plain text, not
+##     mirrored in raw_input_data/)
 ##   data_prep/study_cohort_genetics/output/cojo_haplotypes_minor_allele.csv - from 3_cojo_annotate.R
 ##   STUDY_COHORT_PHENOTYPES (raw_input_data/data_paths.R) - participant phenotypes, diagnosis,
 ##     sex, age and genetic PCs; no generating script in this repository
@@ -56,13 +57,14 @@ check_allele_frequencies <- function(data, snps, dosage_cols, expected_freq, tol
 ## 1. Select literature and COJO haplotype SNPs from the cohort's SNP dosages
 ## -----------------------------------------------------------------------------
 
-SNPS_RAW_PATH <- "data_prep/study_cohort_genetics/output/snps/chr6_mhc.raw"
+SNPS_RAW_PATH <- "data_prep/study_cohort_genetics/output/snps/chr6_mhc.raw.gz"
+SNPS_RAW_READ_CMD <- paste("zcat", SNPS_RAW_PATH)
 
-# The full file is ~5.7GB with 150k+ SNP columns, but only a handful of SNPs
-# are actually needed below; reading the header alone (cheap) first lets us
-# fread() only the needed columns afterwards, rather than loading everything
-# into memory just to subset it away.
-snps_header_chr <- paste0("chr", colnames(fread(SNPS_RAW_PATH, nrows = 0)))
+# The full file is ~5.7GB (150k+ SNP columns) uncompressed, but only a
+# handful of SNPs are actually needed below; reading the header alone
+# (cheap) first lets us fread() only the needed columns afterwards, rather
+# than loading everything into memory just to subset it away.
+snps_header_chr <- paste0("chr", colnames(fread(cmd = SNPS_RAW_READ_CMD, nrows = 0)))
 
 # Previously reported AD/longevity SNPs (see figure1_figure2.R's previous_studies_lookup)
 rs6605556   <- grep("chr6:32615322:A:G_A", snps_header_chr, value = TRUE) # Bellenguez 2022
@@ -82,7 +84,7 @@ matches_snps <- unname(sapply(cojo_ann$SNP, function(snp) grep(snp, snps_header_
 snps_to_select <- unique(c(rs6605556, rs9271192, rs601945, rs35472547, rs34831921, rs9275152, matches_snps, hla_dra1, hla_dra2, rs_kunkle))
 col_indices <- c(2, which(snps_header_chr %in% snps_to_select)) # column 2 = IID
 
-selected_snps <- fread(SNPS_RAW_PATH, select = col_indices, header = TRUE, check.names = FALSE, data.table = FALSE)
+selected_snps <- fread(cmd = SNPS_RAW_READ_CMD, select = col_indices, header = TRUE, check.names = FALSE, data.table = FALSE)
 colnames(selected_snps) <- paste0("chr", colnames(selected_snps))
 colnames(selected_snps)[1] <- "ID_GWAS"
 
