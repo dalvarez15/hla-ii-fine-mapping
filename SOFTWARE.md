@@ -20,11 +20,10 @@ conda activate hla-ii-finemapping
 
 ### Which scripts need which packages
 
-The 7 main scripts at the repository root, and `data_prep/`, together load: `data.table`,
+The 7 main scripts at the repository root, and `data_prep/`, together use: `data.table`,
 `dplyr`, `stringr`, `tidyr`, `ggplot2`, `patchwork`, `RColorBrewer`, `gridExtra`, `ggpubr`,
-`corrplot`, `readxl` and `scales` (the last used inline as `scales::alpha()`, never
-`library()`-loaded). No single script needs all of them — see each script's own header for
-its specific inputs, and its `library()` calls for what it actually loads.
+`corrplot`, `readxl` and `scales`. No single script needs all of them — see each script's own
+header for its specific inputs, and its `library()` calls for what it actually loads.
 
 ---
 
