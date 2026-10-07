@@ -22,13 +22,14 @@ library(data.table)
 # setwd("/path/to/repository")
 
 source("raw_input_data/data_paths.R")
+source("data_prep/study_cohort_genetics/hla_ii_window.R")
 
 OUTDIR <- "data_prep/study_cohort_genetics/output/regional_ld"
 STUDY_COHORT_SAMPLES <- "data_prep/study_cohort_genetics/output/study_cohort_samples.txt"
 dir.create(OUTDIR, recursive = TRUE, showWarnings = FALSE)
 
 ## -----------------------------------------------------------------------------
-## 1. Restrict the GWAS summary statistics to the HLA/MHC region
+## 1. Restrict the GWAS summary statistics to the HLA-II window
 ## -----------------------------------------------------------------------------
 
 CHR <- 6
@@ -38,12 +39,9 @@ RISK_TOP_SNP       <- "6:32447376:C:T" # EADB-GWAS-2026 top SNP, rs9469112
 
 fullstats <- fread(EADB_GWAS_SUMSTATS_FULL, h = T, stringsAsFactors = F)
 
-# Region spans the HLA class II genes, bounded by the first SNP at or after
-# 32 Mb and the last SNP at or before 34 Mb on chromosome 6 - must match
-# figure1_figure2.R's plot_start/plot_end exactly, since this script's LD
-# matrix is plotted over that same region in Figure 1
-REGION_START <- min(fullstats$POS[fullstats[["#CHROM"]] == CHR & fullstats$POS >= 32000000])
-REGION_END   <- max(fullstats$POS[fullstats[["#CHROM"]] == CHR & fullstats$POS >= 33000000 & fullstats$POS <= 34000000])
+hla_ii <- hla_ii_window(fullstats$POS[fullstats[["#CHROM"]] == CHR])
+REGION_START <- hla_ii[["start"]]
+REGION_END   <- hla_ii[["end"]]
 
 fullstats_mhc <- fullstats[get("#CHROM") == CHR & get("POS") >= REGION_START & get("POS") <= REGION_END]
 

@@ -1,10 +1,9 @@
 ## =============================================================================
 ## LD-based clumping (r2=0.80) and COJO fine-mapping of the HLA/MHC region
 ## (chr6:28,510,120-33,480,575): tests whether clumps reaching P<=1e-5
-## ("suggestive") and within 1 Mb of the region's EADB-GWAS-2026 top SNP
-## (protective, rs35472547) remain independently associated with AD, via
-## GCTA's Conditional Joint (COJO) analysis, then FDR-adjusts the joint
-## p-values.
+## ("suggestive") within the HLA-II window (chr6:32,037,271-33,092,341, see
+## hla_ii_window.R) remain independently associated with AD, via GCTA's
+## Conditional Joint (COJO) analysis, then FDR-adjusts the joint p-values.
 ## =============================================================================
 ##
 ## Reads private data not included in this repository - see DATA_ACCESS.md.
@@ -30,14 +29,11 @@ library(data.table)
 # setwd("/path/to/repository")
 
 source("raw_input_data/data_paths.R")
+source("data_prep/study_cohort_genetics/hla_ii_window.R")
 
 GENOTYPE_PATH <- "data_prep/study_cohort_genetics/output/snps/"
 CLUMP_R2 <- 0.80
 P_SUGGESTIVE <- 1e-5 # must match figure1_figure2.R's P_SUGGESTIVE
-
-# EADB-GWAS-2026 top SNP for this locus (protective, rs35472547, P=2.61e-23);
-# COJO tests clumps within 1 Mb of it for independent association
-TOP_SNP_POS <- 32592593
 
 dir.create("data_prep/study_cohort_genetics/output/snps", recursive = TRUE, showWarnings = FALSE)
 dir.create("data_prep/study_cohort_genetics/output/cojo", recursive = TRUE, showWarnings = FALSE)
@@ -142,6 +138,8 @@ fullstats <- fread(EADB_GWAS_SUMSTATS_FULL, h = T, stringsAsFactors = F)
 
 CHR <- 6
 tmp_sumstats <- fullstats[which(fullstats$"#CHROM" == CHR), ]
+hla_ii <- hla_ii_window(tmp_sumstats$POS)
+message(sprintf("HLA-II window: chr%d:%d-%d", CHR, hla_ii[["start"]], hla_ii[["end"]]))
 # Align effect allele with the genotyping data's ALT allele
 tmp_sumstats$freq_checked <- ifelse((tmp_sumstats$beta_ALT * tmp_sumstats$beta) > 0, tmp_sumstats$effect_allele_frequency, 1 - tmp_sumstats$effect_allele_frequency)
 tmp_sumstats$total_n <- tmp_sumstats$n_cases + tmp_sumstats$n_controls
@@ -149,12 +147,12 @@ tmp_sumstats <- tmp_sumstats[, c('ID', 'ALT', 'REF', 'freq_checked', 'beta_ALT',
 colnames(tmp_sumstats) <- c('SNP', 'A1', 'A2', 'freq', 'b', 'se', 'p', 'N')
 
 ## -----------------------------------------------------------------------------
-## 5. COJO: test independence of suggestive clumps within 1 Mb of the top SNP
+## 5. COJO: test independence of suggestive clumps within the HLA-II window
 ## -----------------------------------------------------------------------------
 
 outdir <- "data_prep/study_cohort_genetics/output/cojo/"
 tmp_clumps <- clumps_df[which(clumps_df$suggestive == 'yes'), ]
-tmp_clumps_snps <- tmp_clumps[which(abs(tmp_clumps$POS - TOP_SNP_POS) <= 1000000), ]
+tmp_clumps_snps <- tmp_clumps[which(tmp_clumps$POS >= hla_ii[["start"]] & tmp_clumps$POS <= hla_ii[["end"]]), ]
 tmp_fullstats_top <- tmp_sumstats[which(tmp_sumstats$SNP %in% tmp_clumps_snps$ID), ]
 
 write.table(tmp_fullstats_top[!duplicated(tmp_fullstats_top$SNP), ], paste0(outdir, 'tmp_cojo_top.ma'), quote = F, row.names = F, sep = "\t")
