@@ -64,8 +64,7 @@ the `setwd("/path/to/repository")` line near the top of the script to set the wo
 explicitly, which lets you run it from anywhere. Scripts that read individual-level data or call
 external tools (PLINK, GCTA) also source `raw_input_data/data_paths.R`; copy
 `raw_input_data/data_paths.R.example` to `raw_input_data/data_paths.R` and fill in the paths for
-your own copy of the data and your own PLINK/GCTA install — see `DATA_ACCESS.md` and
-`raw_input_data/SOURCE_DATA_MANIFEST.md` for what each path is.
+your own copy of the data and your own PLINK/GCTA install — see `DATA_ACCESS.md`.
 
 All 7 main scripts can be run directly against the files already committed in this repository
 (`data_prep/reference_data/` and `data_prep/*/output/`). To regenerate those files from scratch,

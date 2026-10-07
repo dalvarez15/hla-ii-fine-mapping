@@ -72,8 +72,7 @@ Version used in this study: **v1.94.1**.
 `raw_input_data/*/hla_imputation/result_{DQA1,DQB1,DRB1}.txt` (both cohorts) are HIBAG output
 — classical two-field HLA allele calls imputed from SNP array genotypes. Generating them is
 necessary before this pipeline can run, but imputation itself is not addressed by any script
-in this repository: the results are supplied as private raw input (see `DATA_ACCESS.md` and
-`raw_input_data/SOURCE_DATA_MANIFEST.md`).
+in this repository: the results are supplied as private raw input (see `DATA_ACCESS.md`).
 
 For the imputation pipeline itself (HIBAG model, liftover, PLINK steps), see
 [`hla_imputation/`](https://github.com/dalvarez15/Carrying-specific-HLA-alleles-decreases-the-chance-of-reaching-healthy-old-age/tree/main/hla_imputation)

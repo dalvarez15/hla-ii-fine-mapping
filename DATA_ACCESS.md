@@ -46,8 +46,7 @@ of a research proposal.
 If you have obtained access to this data and want to re-run the pipeline yourself, place your
 copies under `raw_input_data/<cohort>/` matching the layout each `data_prep/` script's
 header describes, then copy `raw_input_data/data_paths.R.example` to `raw_input_data/data_paths.R`
-and fill in the placeholder paths (see `raw_input_data/SOURCE_DATA_MANIFEST.md` for what each one
-is). Run every script from the repository root (see the top-level `README.md`), and run the
+and fill in the placeholder paths (the comments in the template describe each one). Run every script from the repository root (see the top-level `README.md`), and run the
 `data_prep/` scripts in dependency order.
 
 Every private input this pipeline needs is one of the `data_paths.R` constants above — nothing

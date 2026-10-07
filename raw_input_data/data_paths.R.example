@@ -6,9 +6,7 @@
 ##
 ## Every path defined here points to private, individual-level data (or a
 ## working file derived from it) - see DATA_ACCESS.md for what's excluded
-## from this public repository and why, and
-## raw_input_data/SOURCE_DATA_MANIFEST.md for exactly what each constant is
-## and (internally) where it came from.
+## from this public repository and why.
 ## =============================================================================
 
 ## --- Files physically placed under raw_input_data/<cohort>/ ---
