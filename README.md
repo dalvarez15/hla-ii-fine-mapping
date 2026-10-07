@@ -33,7 +33,7 @@ Code repository for:
 │   ├── study_cohort_genetics/    #   private data required (see DATA_ACCESS.md)
 │   ├── 100plus_study_cohort/
 │   ├── nbb_replication_cohort/
-│   └── reference_data/           #   Ensembl coordinates; GWAS statistics for chr6:32-34 Mb
+│   └── reference_data/           #   Ensembl coordinates; GWAS statistics for chr6:32.04-33.09 Mb
 └── raw_input_data/               # Location for private inputs (gitignored)
     └── data_paths.R.example      #   template for raw_input_data/data_paths.R
 ```

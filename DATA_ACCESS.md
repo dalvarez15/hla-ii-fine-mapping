@@ -7,8 +7,8 @@ document lists what is excluded, which scripts need it, and how to obtain it.
 ## What's included
 
 - All analysis code (`data_prep/` and the figure and table scripts at the repository root).
-- Aggregate, non-identifiable inputs: GWAS summary statistics for chr6:32,000,000-34,000,000
-  around the HLA-II region (the window Figures 1 and 2 use), Ensembl gene coordinates, and the
+- Aggregate, non-identifiable inputs: GWAS summary statistics for the HLA-II window
+  chr6:32,037,271-33,092,341 (the window Figures 1 and 2 use), Ensembl gene coordinates, and the
   aggregate outputs of the `data_prep/` pipelines (clumping results, COJO haplotype table, LD
   matrices and regression summary statistics). These are all the 7 main figure and table scripts
   need to run from a clone of this repository (see `README.md`).
@@ -28,7 +28,7 @@ repository").
 2. **The genome-wide chr6 dosage file** (~27 GB) from which the study cohort's genetic data are
    extracted. It is too large to redistribute and not specific to this analysis.
 3. **The EADB-GWAS-2026 summary statistics**, aligned with PLINK. These are aggregate data, but
-   not ours to redistribute in full. Only the chr6:32,000,000-34,000,000 window used for Figures 1
+   not ours to redistribute in full. Only the chr6:32,037,271-33,092,341 window used for Figures 1
    and 2 is included (`data_prep/reference_data/gwas_summary_stats_eadb2026.txt`).
 
 ## How to obtain the data

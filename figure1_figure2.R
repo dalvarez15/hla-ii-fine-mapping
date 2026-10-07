@@ -12,9 +12,9 @@
 ##
 ## Inputs:
 ##   data_prep/reference_data/gwas_summary_stats_eadb2026.txt - EADB-GWAS-2026 summary
-##     statistics, aligned with PLINK, trimmed to chr6:32,000,000-34,000,000 (the search window
-##     this script's own region-boundary computation below needs) - see DATA_ACCESS.md for why
-##     only this narrow window is committed here rather than the full chr6 (or genome-wide) file
+##     statistics, aligned with PLINK, trimmed to the HLA-II window chr6:32,037,271-33,092,341
+##     (data_prep/study_cohort_genetics/hla_ii_window.R) - see DATA_ACCESS.md for why only this
+##     narrow window is committed here rather than the full chr6 (or genome-wide) file
 ##   data_prep/study_cohort_genetics/output/clumping_r2_080.clumps - from 1_clumping_cojo.R
 ##   data_prep/study_cohort_genetics/output/cojo_haplotypes_minor_allele.csv - from 3_cojo_annotate.R
 ##   data_prep/reference_data/ensembl_gene_coordinates_chr6_mhc.txt - for the HLA class II gene track
@@ -49,6 +49,9 @@ P_SUGGESTIVE <- 1e-5
 
 PROTECTIVE_TOP_SNP <- "6:32592593:G:T" # EADB-GWAS-2026 top SNP, rs35472547
 RISK_TOP_SNP       <- "6:32447376:C:T" # EADB-GWAS-2026 top SNP, rs9469112
+
+# HLA-II window, shared with data_prep/study_cohort_genetics/
+source("data_prep/study_cohort_genetics/hla_ii_window.R")
 
 ## -----------------------------------------------------------------------------
 ## Helper functions
@@ -122,10 +125,9 @@ previous_studies_lookup <- data.frame(
 ## 2. Preprocess GWAS summary statistics for the HLA/MHC region
 ## -----------------------------------------------------------------------------
 
-# Region spans the HLA class II genes, bounded by the first SNP at or after
-# 32 Mb and the last SNP at or before 34 Mb on chromosome 6
-plot_start <- min(gwas_summary_stats$POS[gwas_summary_stats$CHROM == CHR & gwas_summary_stats$POS >= 32000000])
-plot_end <- max(gwas_summary_stats$POS[gwas_summary_stats$CHROM == CHR & gwas_summary_stats$POS >= 33000000 & gwas_summary_stats$POS <= 34000000])
+hla_ii <- hla_ii_window(gwas_summary_stats$POS[gwas_summary_stats$CHROM == CHR])
+plot_start <- hla_ii[["start"]]
+plot_end <- hla_ii[["end"]]
 
 fullstats_filtered <- gwas_summary_stats %>%
   filter(CHROM == CHR, POS >= plot_start, POS <= plot_end) %>%
