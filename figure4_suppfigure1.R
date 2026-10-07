@@ -111,24 +111,22 @@ plot_allele_frequency_comparison <- function(assocs, features, small_x_text = FA
 
   freqs$allele <- factor(freqs$allele, levels = features)
 
-  pick_first <- function(x) {
-    x2 <- x[!is.na(x)]
-    if (length(x2) == 0) return(NA_integer_)
-    x2[1]
-  }
-  n_cent_val <- pick_first(freqs$n_cent)
-  n_ctrl_val <- pick_first(freqs$n_controls)
-  n_ad_val   <- pick_first(freqs$n_ad)
-
+  # Each facet gets its own x axis, keyed by feature and group (e.g.
+  # "DRB1*04:01|CHCs"), so the n under each group is that feature's own
+  # sample size: HLA alleles have fewer samples than the lead SNPs after
+  # HIBAG QC, and the sample size differs between HLA loci
+  group_key <- function(allele, group) paste0(allele, "|", group)
   x_labels <- c(
-    "CHCs" = paste0("CHCs\nn=", ifelse(is.na(n_cent_val), "NA", n_cent_val)),
-    "CNTR" = paste0("CNTR\nn=", ifelse(is.na(n_ctrl_val), "NA", n_ctrl_val)),
-    "AD"   = paste0("AD\nn=",   ifelse(is.na(n_ad_val),   "NA", n_ad_val))
+    setNames(paste0("CHCs\nn=", ifelse(is.na(freqs$n_cent),     "NA", freqs$n_cent)),     group_key(freqs$allele, "CHCs")),
+    setNames(paste0("CNTR\nn=", ifelse(is.na(freqs$n_controls), "NA", freqs$n_controls)), group_key(freqs$allele, "CNTR")),
+    setNames(paste0("AD\nn=",   ifelse(is.na(freqs$n_ad),       "NA", freqs$n_ad)),       group_key(freqs$allele, "AD"))
   )
 
   df_long <- freqs %>%
     pivot_longer(c(CHCs, CNTR, AD), names_to = "group", values_to = "freq") %>%
     mutate(group = factor(group, levels = c("CHCs", "CNTR", "AD")),
+           x_key = factor(group_key(allele, group),
+                          levels = group_key(rep(features, each = 3), c("CHCs", "CNTR", "AD"))),
            freq_pct = 100 * freq)
 
   top <- df_long %>%
@@ -173,6 +171,8 @@ plot_allele_frequency_comparison <- function(assocs, features, small_x_text = FA
         TRUE      ~ "n.s."
       )
     ) %>%
+    mutate(group1 = group_key(allele, group1),
+           group2 = group_key(allele, group2)) %>%
     select(allele, group1, group2, p, label) %>%
     left_join(top, by = "allele") %>%
     group_by(allele) %>%
@@ -182,10 +182,10 @@ plot_allele_frequency_comparison <- function(assocs, features, small_x_text = FA
     ) %>%
     ungroup()
 
-  p <- ggplot(df_long, aes(group, freq_pct, fill = group)) +
+  p <- ggplot(df_long, aes(x_key, freq_pct, fill = group)) +
     labs(x = NULL, y = "Allele frequency (%)") +
     geom_col(width = 0.6, color = "black") +
-    facet_wrap(~ allele, scales = "free_y", nrow = 1) +
+    facet_wrap(~ allele, scales = "free", nrow = 1) +
     scale_fill_manual(values = c(
       "CHCs" = "#B8860B",
       "CNTR" = "#1F78B4",
