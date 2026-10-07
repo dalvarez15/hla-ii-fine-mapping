@@ -99,6 +99,10 @@ Most scripts run on a laptop. Two steps in `study_cohort_genetics/` need much mo
 Both need considerably more memory than the size of their input. On a shared HPC system, submit
 them as batch jobs rather than running them on a login node.
 
+## Archival
+
+A permanent copy of this code is archived on Zenodo: [doi:10.5281/zenodo.23219197](https://doi.org/10.5281/zenodo.23219197). This DOI always resolves to the latest release.
+
 ## License
 
 Released under the [MIT License](LICENSE).
