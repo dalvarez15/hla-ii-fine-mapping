@@ -1,21 +1,12 @@
 ## =============================================================================
 ## Template for raw_input_data/data_paths.R. Copy this file to
-## raw_input_data/data_paths.R (your copy, with real paths filled in, is
-## gitignored and never committed - only this placeholder template is) and
-## fill in every path below for your own environment.
-##
-## Every path defined here points to private, individual-level data (or a
-## working file derived from it) - see DATA_ACCESS.md for what's excluded
-## from this public repository and why, and
-## raw_input_data/SOURCE_DATA_MANIFEST.md for exactly what each constant is
-## and (internally) where it came from.
+## raw_input_data/data_paths.R (gitignored) and fill in the paths for your
+## own environment. Every path points to private data or to a file derived
+## from it; see DATA_ACCESS.md.
 ## =============================================================================
 
-## --- Files physically placed under raw_input_data/<cohort>/ ---
-## Small enough to copy into raw_input_data/<cohort>/ directly - gitignored
-## there (see .gitignore), never committed regardless. Already correct if
-## you mirror the layout DATA_ACCESS.md describes; only change these if you
-## use a different layout.
+## --- Files placed under raw_input_data/<cohort>/ ---
+## Correct as given if you follow the layout in DATA_ACCESS.md.
 
 STUDY_COHORT_PHENOTYPES          <- "raw_input_data/study_cohort_genetics/phenotypes.txt"
 STUDY_COHORT_HLA_IMPUTATION_DIR  <- "raw_input_data/study_cohort_genetics/hla_imputation"
@@ -28,20 +19,18 @@ NBB_PHENOTYPES_RDATA   <- "raw_input_data/nbb_replication_cohort/phenotypes.Rdat
 NBB_PCS_EIGENVEC       <- "raw_input_data/nbb_replication_cohort/pcs.eigenvec"
 NBB_HLA_IMPUTATION_DIR <- "raw_input_data/nbb_replication_cohort/hla_imputation"
 
-## --- Files too large or external to mirror under raw_input_data/ ---
-## NOT copied into raw_input_data/ - either too large (the ~27GB genome-wide
-## dosage file) or aggregate data this repository doesn't have redistribution
-## rights to (see DATA_ACCESS.md for which is which). Still private; point
-## these at wherever your own copies live - they don't need to be anywhere
-## under raw_input_data/ at all.
+## --- Files kept outside raw_input_data/ ---
+## Too large to copy (the ~27 GB genome-wide dosage file), or aggregate data
+## this repository may not redistribute (see DATA_ACCESS.md). Point these to
+## your own copies.
 
 CHR6_GENOMEWIDE_DOSAGE  <- "/path/to/chr6.dose.unscrambled"                  # ~27GB genome-wide chr6 dosage data (PLINK2 .pgen/.pvar/.psam, no extension)
 EADB_GWAS_SUMSTATS_FULL <- "/path/to/eadb_gwas_2026_summary_stats.txt"       # EADB-GWAS-2026 summary statistics, aligned with PLINK
 AD_MEGA_META_HITS       <- "/path/to/ad_mega_meta_hits.tsv.gz"              # external AD-GWAS meta-analysis index-variant hits
 
 ## --- Tool binaries ---
-## Update to your own PLINK2/PLINK/GCTA install (or just "plink2"/"plink"/
-## "gcta64" if they're already on your $PATH).
+## Your PLINK 2, PLINK 1.9 and GCTA binaries, or "plink2", "plink" and
+## "gcta64" if they are on your $PATH.
 
 PLINK2_PATH <- "/path/to/plink2"
 PLINK1_PATH <- "/path/to/plink"

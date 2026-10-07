@@ -1,0 +1,33 @@
+{
+  "title": "Code for: Fine-mapping HLA-II haplotypes in Alzheimer's disease and healthy longevity reveals distinct associations with microglial HLA-II load and neuropathology",
+  "upload_type": "software",
+  "description": "<p>Analysis code for the preprint <em>Fine-mapping HLA-II haplotypes in Alzheimer's disease and healthy longevity reveals distinct associations with microglial HLA-II load and neuropathology</em> (medRxiv, 2026). The repository contains the data preparation pipelines for the study cohort, the 100-plus Study and the Netherlands Brain Bank replication cohort (clumping, conditional analysis, LD and HLA allele association), and the scripts that produce the figures and tables of the manuscript.</p>",
+  "creators": [
+    {
+      "name": "Álvarez Sirvent, Daniel",
+      "affiliation": "Genomics of Neurodegenerative Diseases and Aging, Human Genetics, Vrije Universiteit Amsterdam, Amsterdam UMC location VUmc, Amsterdam, The Netherlands",
+      "orcid": "0000-0002-4180-5660"
+    }
+  ],
+  "references": [
+    "Álvarez Sirvent D, Luimes MC, Tesi N, Rohde SK, Salazar AN, Bijker LJ, van Schoor NM, Tijms BM, Vijverberg EGB, Strijbis EMM, Hoekstra EJ, Holtman IR, van der Lee SJ, Hulsman M, Holstege H. Fine-mapping HLA-II haplotypes in Alzheimer's disease and healthy longevity reveals distinct associations with microglial HLA-II load and neuropathology. medRxiv 2026.08.24.26361177 (2026). https://doi.org/10.64898/2026.08.24.26361177"
+  ],
+  "license": "mit",
+  "access_right": "open",
+  "keywords": [
+    "HLA",
+    "fine-mapping",
+    "Alzheimer's disease",
+    "healthy longevity",
+    "microglia",
+    "neuropathology"
+  ],
+  "related_identifiers": [
+    {
+      "relation": "isSupplementTo",
+      "identifier": "10.64898/2026.08.24.26361177",
+      "scheme": "doi",
+      "resource_type": "publication-preprint"
+    }
+  ]
+}
