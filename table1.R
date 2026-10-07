@@ -107,7 +107,7 @@ table1 <- table1 %>%
   mutate(
     `Major MHC-II structures in LD r2>0.2` = unname(hap_dr_broad[Haplotype]),
     `HLA-II alleles in LD r2>0.2` = case_when(
-      Haplotype == "Hap-B" ~ "DRB1*04:04, DQA1*03:01, DQB1*03:02",
+      Haplotype == "Hap-B" ~ "DRB1*04:01, DQA1*03:01, DQB1*03:02",
       Haplotype == "Hap-R" ~ "DRB1*01:01, DQA1*01:01, DQB1*05:01",
       Haplotype == "Hap-Y" ~ "DRB1*15:01, DQA1*01:02, DQB1*06:02",
       TRUE ~ NA_character_
