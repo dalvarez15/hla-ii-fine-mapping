@@ -7,7 +7,10 @@ see `DATA_ACCESS.md`) and the 7 main figure and table scripts at the repository 
 
 ## R environment
 
-The analysis was run with R 4.6.1 and the package versions pinned in `environment.yml`.
+The analysis was run with R 4.6.1. `environment.yml` provides R 4.5.3 with the same package
+versions apart from minor patch releases (data.table 1.18.4, gridExtra 2.3.1, readxl 1.5.0.1); it
+reproduces the figures and tables in this repository. Figure 5 is saved with `cairo_pdf()`, so its
+font depends on the fonts installed on the system.
 
 ### Creating the environment
 
