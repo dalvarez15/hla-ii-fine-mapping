@@ -423,10 +423,6 @@ color_breaks <- c(0, 0.2, 0.4, 0.6, 0.8, 1)
 
 fullstats_filtered$in_previous_studies <- fullstats_filtered$ID %in% previous_studies_lookup$ID
 
-# This SNP's LD was rounded to 0.60 (from 0.599) in Figure 3, so the same
-# rounding is applied here for consistency between figures
-fullstats_filtered[which(fullstats_filtered$ID == "6:32411770:C:T"), "ld_r2_top_snp1_and2"] <- 0.61 # Thomassen-1
-
 gwas_ld_topsnps <- ggplot(fullstats_filtered, aes(x = POS, y = -log10(P))) +
     geom_hline(yintercept = -log10(P_GW), color = "red", linewidth = 0.8) +
     geom_hline(yintercept = -log10(P_SUGGESTIVE), linetype = "dashed", color = "grey50", linewidth = 0.8) +
