@@ -18,6 +18,8 @@ Code repository for:
 ├── DATA_ACCESS.md                # What's public vs. private, and how to obtain the private data
 ├── SOFTWARE.md                   # R, PLINK, GCTA versions and setup
 ├── environment.yml               # Conda environment (R + all packages, version-pinned)
+├── LICENSE                       # MIT license
+├── CITATION.cff                  # Citation metadata
 ├── figure1_figure2.R             # Main scripts: produce every figure/table in the manuscript
 ├── figure3.R                     #   from the small aggregate files data_prep/ produces
 ├── figure4_suppfigure1.R         #
@@ -103,6 +105,10 @@ Both need substantially more memory than the input file size to run comfortably,
 HPC system should be submitted as a batch job rather than run on a login node, which is typically
 memory-limited and shared across many users. Every other script operates on much smaller,
 already-trimmed data and doesn't need special handling.
+
+## License
+
+Released under the [MIT License](LICENSE).
 
 ## Contact
 

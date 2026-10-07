@@ -1,0 +1,10 @@
+# LD matrices from PLINK, not linker scripts
+*.ld linguist-detectable=false
+*.ld linguist-language=Text
+
+# Generated data files
+data_prep/**/output/** linguist-generated=true
+data_prep/reference_data/* linguist-generated=true
+tables/* linguist-generated=true
+figures/*.pdf linguist-generated=true binary
+figures/*.pdf -diff
