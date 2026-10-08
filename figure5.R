@@ -30,7 +30,7 @@ library(gridExtra)
 ## Helper functions
 ## -----------------------------------------------------------------------------
 
-# Heatmap of standardized effect sizes (feature x outcome), with FDR labels.
+# Heatmap of standardized effect sizes (feature x outcome), with significance labels.
 make_panel <- function(df, outcome_order, title, zlim) {
   df <- df %>%
     filter(test_var %in% outcome_order) %>%
@@ -41,7 +41,7 @@ make_panel <- function(df, outcome_order, title, zlim) {
 
   ggplot(df, aes(x = snp_var, y = test_var, fill = beta_std)) +
     geom_tile(color = "grey80") +
-    geom_text(aes(label = label), size = 3) +
+    geom_text(aes(label = label), size = 2.6) +
     scale_fill_gradient2(
       low = "blue", mid = "white", high = "red", midpoint = 0,
       limits = c(-zlim, zlim), name = "Effect\n(std. beta)"
@@ -91,7 +91,7 @@ to_panel_df <- function(df) {
     test_var = df$`Outcome variable`,
     snp_var  = factor(df$Feature, levels = haplotype_features),
     beta_std = df$`Std. Beta`,
-    label    = ifelse(df$`FDR P` < 0.05, sprintf("fdr=%.2g", df$`FDR P`), "")
+    label    = ifelse(df$`FDR P` < 0.05, paste0("FDR=", formatC(df$`FDR P`, format = "e", digits = 1)), "")
   )
 }
 

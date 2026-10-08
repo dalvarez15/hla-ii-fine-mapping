@@ -5,10 +5,12 @@
 ## For every genetic feature of Hap-B, Hap-R and Hap-Y, and every
 ## microglial-marker/neuropathology outcome, fits a linear regression
 ## (100-plus: correcting for genetic PCs 1-5, sex and age at death; NBB:
-## additionally correcting for post-mortem delay) and applies an
-## effective-number-of-tests (Li & Ji) FDR correction within each outcome
-## class. This is the one data_prep/ step spanning two cohorts, so it runs
-## last, after both ../100plus_study_cohort/1_combine_snps_alleles_neuropathology_100plus.R
+## additionally correcting for post-mortem delay) and applies a
+## Benjamini-Hochberg FDR correction: in the 100-plus Study within each outcome
+## class, and in the NBB replication cohort within the pre-specified Hap-B
+## family (Hap-B features across all NBB outcomes), with Hap-R and Hap-Y
+## corrected separately as exploratory analyses. This is the one data_prep/
+## step spanning two cohorts, so it runs last, after both ../100plus_study_cohort/1_combine_snps_alleles_neuropathology_100plus.R
 ## and ../nbb_replication_cohort/2_combine_snps_alleles_neuropathology_nbb.R.
 ## =============================================================================
 ##
@@ -119,32 +121,14 @@ run_hla_regression_loop <- function(data, outcomes, features, formula_covariates
   results
 }
 
-# Effective number of independent tests among correlated markers (Li & Ji,
-# 2005): sum of the eigenvalues of the marker correlation matrix, capped at 1
-# each, used below to correct FDR for the correlation between the haplotypes'
-# SNP/allele features.
-calc_meff_li_ji <- function(X) {
-  R <- cor(X, use = "pairwise.complete.obs")
-  ev <- eigen(R, only.values = TRUE)$values
-  sum(pmin(ev, 1))
-}
-
-# FDR-corrects p-values within each outcome class (e.g. microglial markers
-# vs. neuropathology scores), scaling the Benjamini-Hochberg correction by
-# the effective (Li & Ji) rather than nominal number of markers tested.
-add_meff_fdr <- function(results, outcome_groups, m_eff_per_marker) {
+# Benjamini-Hochberg FDR correction within each outcome class (e.g. microglial
+# markers vs. neuropathology scores), across all haplotype features and
+# outcomes in that class.
+add_fdr <- function(results, outcome_groups) {
   results$p_fdr <- NA_real_
   for (group in outcome_groups) {
     idx <- results$test_var %in% group
-    pvals <- results$pval[idx]
-
-    n_pheno <- length(unique(results$test_var[idx]))
-    m_eff_total <- m_eff_per_marker * n_pheno
-
-    q_bh <- p.adjust(pvals, method = "fdr")
-    q_meff <- pmin(q_bh * (m_eff_total / length(pvals)), 1)
-
-    results$p_fdr[idx] <- q_meff
+    results$p_fdr[idx] <- p.adjust(results$pval[idx], method = "fdr")
   }
   results
 }
@@ -221,11 +205,7 @@ results <- run_hla_regression_loop(
 )
 results$snp_var <- factor(results$snp_var, levels = haplotype_features)
 
-# Effective number of independent tests among the haplotype features, used
-# for the Li & Ji-scaled FDR correction below
-meff_100plus <- calc_meff_li_ji(microglia_alleles_combined[, haplotype_features])
-
-results <- add_meff_fdr(results, list(neuropathology_all, microglia_loads), meff_100plus)
+results <- add_fdr(results, list(neuropathology_all, microglia_loads))
 results$test_var <- factor(results$test_var, levels = c(microglia_loads, neuropathology_all))
 
 ## -----------------------------------------------------------------------------
@@ -291,8 +271,11 @@ for (test in nbb_outcomes_tau_amyloid) {
 nbb_results <- rbind(nbb_results, nbb_results_tau_amyloid)
 nbb_results$snp_var <- factor(nbb_results$snp_var, levels = haplotype_features)
 
-meff_nbb <- calc_meff_li_ji(merged_nbb_alleles_snps_test[, haplotype_features])
-nbb_results <- add_meff_fdr(nbb_results, list(unique(nbb_results$test_var)), meff_nbb)
+# NBB replicates the Hap-B association with lower Braak stage: FDR is
+# controlled within the Hap-B family (all Hap-B features x all NBB outcomes),
+# and separately for the exploratory Hap-R and Hap-Y analyses.
+nbb_family <- ifelse(haplotype_lookup[as.character(nbb_results$snp_var)] == "Hap-B", "Hap-B", "Hap-R/Hap-Y")
+nbb_results$p_fdr <- ave(nbb_results$pval, nbb_family, FUN = function(p) p.adjust(p, method = "fdr"))
 nbb_results$test_var <- factor(nbb_results$test_var, levels = unique(nbb_results$test_var))
 
 ## -----------------------------------------------------------------------------
