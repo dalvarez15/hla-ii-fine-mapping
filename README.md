@@ -3,7 +3,8 @@
 Code repository for:
 
 > Álvarez Sirvent D, Luimes MC, Tesi N, Rohde SK, Salazar AN, Bijker LJ, van Schoor NM, Tijms BM,
-> Vijverberg EGB, Strijbis EMM, Hoekstra EJ, Holtman IR, van der Lee SJ, Hulsman M, Holstege H.
+> Vijverberg EGB, Strijbis EMM, Hoekstra EJ, The Netherlands Brain Bank,
+> Holtman IR, van der Lee SJ, Hulsman M, Holstege H.
 > *Fine-mapping HLA-II haplotypes in Alzheimer's disease and healthy longevity reveals distinct
 > associations with microglial HLA-II load and neuropathology.* medRxiv 2026.08.24.26361177
 > (2026). [doi.org/10.64898/2026.08.24.26361177](https://doi.org/10.64898/2026.08.24.26361177)
