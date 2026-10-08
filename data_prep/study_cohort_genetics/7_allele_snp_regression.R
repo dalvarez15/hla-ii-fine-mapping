@@ -1,7 +1,9 @@
 ## =============================================================================
-## HLA-II allele/SNP association regression (dosage ~ allele + PC1-5, additive
+## HLA-II allele/SNP association regression (group ~ dosage + PC1-5, additive
 ## genetic model, logistic) for the three group comparisons reported in the
-## paper: control-vs-AD, CHC-vs-control, CHC-vs-AD.
+## paper: control-vs-AD, CHC-vs-control, CHC-vs-AD. In each comparison the
+## first-named group is the reference (coded 0), so OR > 1 means a higher
+## allele dosage in the second-named group.
 ## =============================================================================
 ##
 ## Reads private data not included in this repository - see DATA_ACCESS.md.
@@ -37,7 +39,7 @@ library(data.table)
 na_if_empty <- function(x) if (length(x) == 0) NA_real_ else x
 
 # Fits one logistic regression per allele/SNP dosage column in `dosages`
-# (dosage ~ dummy + PC1-5), under an additive genetic model. Returns one row
+# (phenotype ~ dosage + PC1-5), under an additive genetic model. Returns one row
 # per allele/SNP with beta, SE, OR (95% CI), p-value, case/control counts and
 # allele frequencies, labelled with `group_name`.
 run_allele_regression <- function(dosages, group_name) {
@@ -185,14 +187,17 @@ message(sprintf(
 ))
 
 # Association test for the same comparison, using the main analysis's model
-# (dosage ~ group + PC1-5, additive logistic)
+# (group ~ dosage + PC1-5, additive logistic; OR > 1 = higher dosage in controls)
 sub_male <- alleles_snps[(alleles_snps$Diagnosis == "Centenarian" | alleles_snps$Diagnosis %in% CONTROL_DIAGNOSES) & alleles_snps$sex == "M", ]
 sub_male$phenotype <- ifelse(sub_male$Diagnosis == "Centenarian", 0, 1)
 sub_male$dummy <- sub_male[["DRB1*15:01"]]
 model_male <- glm(phenotype ~ dummy + PC1 + PC2 + PC3 + PC4 + PC5, data = sub_male, family = "binomial")
 co_male <- coef(summary(model_male))
-message(sprintf("DRB1*15:01, male CHC vs male Control: beta=%.4f, SE=%.4f, P=%.4g, OR=%.3f",
-                 co_male["dummy", "Estimate"], co_male["dummy", "Std. Error"],
-                 co_male["dummy", "Pr(>|z|)"], exp(co_male["dummy", "Estimate"])))
+b_male <- co_male["dummy", "Estimate"]
+se_male <- co_male["dummy", "Std. Error"]
+message(sprintf("DRB1*15:01, male CHC vs male Control: beta=%.4f, SE=%.4f, P=%.4g, OR=%.3f (95%% CI %.2f-%.2f), N=%d (CHC %d, Control %d)",
+                 b_male, se_male, co_male["dummy", "Pr(>|z|)"],
+                 exp(b_male), exp(b_male - 1.96 * se_male), exp(b_male + 1.96 * se_male),
+                 nobs(model_male), sum(model.frame(model_male)$phenotype == 0), sum(model.frame(model_male)$phenotype == 1)))
 
 write.csv2(all_coefficients, "data_prep/study_cohort_genetics/output/hla_alleles_snps_regression.csv", row.names = FALSE)
