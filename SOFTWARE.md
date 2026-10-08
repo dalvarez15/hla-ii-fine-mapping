@@ -77,4 +77,4 @@ private raw input (see `DATA_ACCESS.md`).
 The imputation pipeline (HIBAG model, liftover, PLINK steps) is in
 [`hla_imputation/`](https://github.com/dalvarez15/Carrying-specific-HLA-alleles-decreases-the-chance-of-reaching-healthy-old-age/tree/main/hla_imputation)
 in the repository for our earlier publication (Álvarez Sirvent et al., *npj Aging*, 2026), which
-uses the same imputation approach.
+uses the same imputation approach, with HIBAG 1.38.0 (Bioconductor 3.18).

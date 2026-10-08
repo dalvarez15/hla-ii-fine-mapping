@@ -1,14 +1,18 @@
 ## =============================================================================
 ## Table 1: the six COJO-independent HLA-II haplotypes (Hap-1, Hap-R, Hap-B,
 ## Hap-Y, Hap-5, Hap-6), each annotated with its major ancestral MHC-II
-## structure, imputed two-field HLA-DRB1/DQA1/DQB1 alleles in LD (r2>0.2), and
-## overlap with previously reported AD/longevity-associated SNPs (in LD, r2>0.2)
+## structure, overlap with previously reported AD/longevity-associated SNPs
+## (in LD, r2>0.2), and, for the three haplotypes carried forward (Figure 3B),
+## the two-field HLA-DRB1, HLA-DQA1 and HLA-DQB1 allele in strongest LD with
+## the lead SNP
 ## =============================================================================
 ##
 ## Inputs:
 ##   data_prep/study_cohort_genetics/output/cojo_haplotypes_minor_allele.csv - COJO-identified
 ##     haplotype lead SNPs (minor-allele oriented), with GWAS and joint-model (COJO) association
 ##     statistics; from 3_cojo_annotate.R
+##   data_prep/study_cohort_genetics/output/haplotype_ld/hla_alleles_snps_ld_matrix.ld/.bim -
+##     r2 matrix between haplotype lead SNPs and imputed HLA alleles; from 6_haplotype_ld.R
 ## Outputs:
 ##   tables/table1.tsv
 ## =============================================================================
@@ -30,6 +34,11 @@ cojo_haplotypes <- read.csv2(
   "data_prep/study_cohort_genetics/output/cojo_haplotypes_minor_allele.csv"
 )
 cojo_haplotypes$ID <- sub("^chr", "", cojo_haplotypes$SNP)
+
+# r2 matrix between haplotype lead SNPs and imputed HLA alleles (as in Figure 3B)
+ld_ids <- fread("data_prep/study_cohort_genetics/output/haplotype_ld/hla_alleles_snps_ld_matrix.bim", header = FALSE)$V2
+ld_matrix <- as.matrix(fread("data_prep/study_cohort_genetics/output/haplotype_ld/hla_alleles_snps_ld_matrix.ld", header = FALSE))
+dimnames(ld_matrix) <- list(ld_ids, ld_ids)
 
 # rs number of the three lead SNPs that overlap previously reported AD or
 # longevity signals (Hap-R, Hap-B, Hap-Y; see step 2)
@@ -102,16 +111,26 @@ previous_studies_by_hap <- previous_studies_lookup %>%
   )
 
 hap_dr_broad <- c("Hap-B" = "DR4", "Hap-R" = "DR1", "Hap-Y" = "DR2")
+
+# For each haplotype carried forward, the two-field allele in strongest LD with
+# the lead SNP at each of HLA-DRB1, HLA-DQA1 and HLA-DQB1, with its r2
+strongest_ld_alleles <- function(hap) {
+  lead <- grep(paste0("^", cojo_haplotypes$SNP[cojo_haplotypes$snp_easy == hap], "_"), ld_ids, value = TRUE)
+  picks <- sapply(c("DRB1", "DQA1", "DQB1"), function(locus) {
+    alleles <- grep(paste0("^", locus, "\\*[0-9]+:[0-9]+$"), ld_ids, value = TRUE)
+    r2 <- ld_matrix[lead, alleles]
+    sprintf("%s (%.2f)", alleles[which.max(r2)], max(r2, na.rm = TRUE))
+  })
+  paste(picks, collapse = ", ")
+}
+
 table1 <- table1 %>%
   left_join(previous_studies_by_hap, by = c("Haplotype" = "ld")) %>%
   mutate(
     `Major MHC-II structures in LD r2>0.2` = unname(hap_dr_broad[Haplotype]),
-    `HLA-II alleles in LD r2>0.2` = case_when(
-      Haplotype == "Hap-B" ~ "DRB1*04:01, DQA1*03:01, DQB1*03:02",
-      Haplotype == "Hap-R" ~ "DRB1*01:01, DQA1*01:01, DQB1*05:01",
-      Haplotype == "Hap-Y" ~ "DRB1*15:01, DQA1*01:02, DQB1*06:02",
-      TRUE ~ NA_character_
-    )
+    `HLA-II alleles in strongest LD per locus (r2)` = unname(sapply(
+      Haplotype, function(h) if (h %in% names(hap_dr_broad)) strongest_ld_alleles(h) else NA_character_
+    ))
   )
 
 ## -----------------------------------------------------------------------------
