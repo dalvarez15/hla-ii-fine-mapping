@@ -2,7 +2,7 @@
 ## Figure 4 & Supplementary Figure 1: allele frequencies of Hap-B, Hap-R and
 ## Hap-Y (lead SNP, DR-broad code, two-field HLA-DRB1/DQA1/DQB1 alleles)
 ## across CHC, control (CNTR) and AD groups, with pairwise odds ratios and
-## significance (logistic regression, corrected for sex and genetic PCs 1-5).
+## significance (logistic regression, corrected for genetic PCs 1-5).
 ## Figure 4 shows the HLA-DRB1 locus only; Supplementary Figure 1 shows the
 ## full haplotype resolution.
 ## =============================================================================
